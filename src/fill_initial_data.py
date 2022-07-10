@@ -14,10 +14,13 @@ def fill_initial_data():
   chrome_options.add_argument("--disable-dev-shm-usage")
   chrome_options.add_argument("--no-sandbox")
   chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-  driver = webdriver.Chrome(chrome_options=chrome_options)
-#   The code below is necessary to be deployed on Heroku
-  driver = webdriver.Chrome(executable_path=os.environ.get(
-      "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+  # 'DYNO' is an environment variable from Heroku
+  if 'DYNO' in os.environ:
+    #   The code below is necessary to be deployed on Heroku
+    driver = webdriver.Chrome(executable_path=os.environ.get(
+        "CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+  else:
+    driver = webdriver.Chrome(chrome_options=chrome_options)
   driver.get('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml')
   time.sleep(2)
 
