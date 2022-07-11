@@ -1,1 +1,1 @@
-web: gunicorn --chdir ./src api:app --timeout=180
+web: gunicorn --chdir ./src api:app --timeout=400
