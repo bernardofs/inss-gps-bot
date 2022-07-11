@@ -36,4 +36,4 @@ Para passar da tela em que o CAPTCHA é verificado, é utilizado o módulo [Sele
 
 - Siga os passos presentes na [documentação do Heroku](https://devcenter.heroku.com/articles/git) para fazer o deploy.
 
-- Adicione o add-on [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) ao app com frequência diária (ele irá rodar nos dias presentes no vetor `DAYS_TO_WORK` no arquivo `constants.py`). Coloque o comando `python -c 'import sys; sys.path.append("./src"); import main; main.execute()'` para ser executado.
+- Adicione o add-on [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) ao app. Caso deseje rodar o bot com frequência diária, mas só o executar de fato em alguns dias do mês, coloque o comando `python -c 'import sys; sys.path.append("./src"); import main; main.execute_day_restriction([28, 10])''` para ser executado. No exemplo anterior, ele executaria o bot nos dias 28 e 10 do mês.
