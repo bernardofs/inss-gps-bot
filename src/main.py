@@ -1,3 +1,4 @@
+from time import time
 import traceback
 from datetime import date
 from generate_gps import generate_gps
@@ -11,7 +12,7 @@ from send_email import send_error_message, send_message
 
 
 def execute():
-  TRIES = 1
+  TRIES = 5
 
   for tries in range(1, TRIES + 1):
     print(f'Attempt {tries}')
@@ -36,6 +37,9 @@ def execute():
     except Exception:
       print('An error has occurred')
       traceback.print_exc()
+      if tries != TRIES:
+        # Wait a little bit until execute the scrapping again.
+        time.sleep(60)
 
     else:
       return '<h1>Success</h1>The program was successfully executed!<br>Please check your email.', 200
