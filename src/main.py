@@ -1,4 +1,4 @@
-from time import time
+import time
 import traceback
 from datetime import date
 from generate_gps import generate_gps
