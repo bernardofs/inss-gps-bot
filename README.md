@@ -30,10 +30,10 @@ Para passar da tela em que o CAPTCHA é verificado, é utilizado o módulo [Sele
 
 - Crie uma conta em [2Captcha](https://2captcha.com/) e copie a `API_KEY` gerada no site.
 
-- Edite o arquivo `constants_example.py`, preenchendo os dados em branco e o renomeie para `constants.py`.
+- Edite o arquivo `src/constants_example.py`, preenchendo os dados em branco e o renomeie para `src/constants.py`.
 
-- Para que a Gmail API funcione, siga os passos presentes no seguinte tutorial: https://www.thepythoncode.com/article/use-gmail-api-in-python. Coloque os arquivos necessários para autenticação na pasta `auth`.
+- Para que a Gmail API funcione, siga os passos presentes no seguinte tutorial: https://www.thepythoncode.com/article/use-gmail-api-in-python. Coloque os arquivos necessários para autenticação na pasta `src/auth`.
 
 - Siga os passos presentes na [documentação do Heroku](https://devcenter.heroku.com/articles/git) para fazer o deploy.
 
-- Adicione o add-on [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) ao app. Caso deseje rodar o bot com frequência diária, mas só o executar de fato em alguns dias do mês, coloque o comando `python -c 'import sys; sys.path.append("./src"); import main; main.execute_day_restriction([28, 10])''` para ser executado. No exemplo anterior, ele executaria o bot nos dias 28 e 10 do mês.
+- Adicione o add-on [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) ao app. Caso deseje rodar o bot com frequência diária, mas só o executar de fato em alguns dias do mês, coloque o comando `python -c 'import sys; sys.path.append("./src"); import main; main.execute_day_restriction([10, 28])''` para ser executado. No exemplo anterior, ele executaria o bot nos dias 10 e 28 de cada mês do ano.
