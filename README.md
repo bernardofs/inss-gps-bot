@@ -1,8 +1,22 @@
-# gps-bot
+# inss-gps-bot
 
-Bot para gerar guias GPS do INSS de forma automatizada.
+🇧🇷 
+
+Bot para gerar guias GPS do INSS de forma automatizada. Utiliza Rest API e Web Scraping.
 
 Presente no site [SAL - Sistema de Acréscimos Legais](http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml) para contribuintes filiados a partir de 29/11/1999.
+
+Você pode ver o flow realizado toda vez que o bot é executado no vídeo abaixo.
+
+🇬🇧 
+
+Generate payment instructions (GPS) the from Brazilian Social Welfare (INSS) in an automated way. It uses Rest API and Web Scraping.
+
+Present in the website [SAL - Sistema de Acréscimos Legais](http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml) to taxpayers enrolled from 29/11/1999.
+
+You can see the flow performed every time the bot runs in the video below.
+
+https://user-images.githubusercontent.com/26277944/179625950-ba78c74a-a2c3-4462-adf2-ea8df3231f47.mp4
 
 ## Comportamento
 
