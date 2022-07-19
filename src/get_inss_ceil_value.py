@@ -5,8 +5,7 @@ import requests
 from constants import PAYMENT_CODE
 
 
-def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY_FORMATTED,
-                        FIRST_WORKING_DAY_BEFORE_LIMIT_FORMATTED):
+def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY):
   # Get the INSS ceil value by requesting the payment of a very large amount of money.
   # This returns an error in the screen which shows the ceil value for the INSS. We
   # can use the error message of this field to get the value we want.
@@ -28,7 +27,14 @@ def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY_FORMATTED,
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
   # Request the GPS for a salary of R$ 100.000,00 (beyond the INSS limit).
-  data = f'informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico&DTPINFRA_TOKEN={DTPINFRA_TOKEN}&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY_FORMATTED}&{VALUE_TO_PAY_FIELD_NAME}=100.000,00&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}&informarSalariosContribuicaoDomestico:dataPag={FIRST_WORKING_DAY_BEFORE_LIMIT_FORMATTED}&{CONFIRM_BUTTON_NAME}=Confirmar&javax.faces.ViewState={VIEW_STATE}'
+  data = f'informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico' \
+      f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
+      f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
+      f'&{VALUE_TO_PAY_FIELD_NAME}=100.000,00' \
+      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}' \
+      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}'\
+      f'&{CONFIRM_BUTTON_NAME}=Confirmar'\
+      f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml',
                            headers=headers, cookies=cookies, data=data)

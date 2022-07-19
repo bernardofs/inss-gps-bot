@@ -1,4 +1,5 @@
 import os
+import dates
 from base64 import urlsafe_b64encode
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -8,7 +9,6 @@ from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
 from authenticate_gmail import gmail_authenticate
 from constants import CATEGORY, HEROKU_ADDRESS, SENDER_EMAIL, RECIPIENT_EMAIL
-from fill_month_and_value import MONTH_TO_PAY_FORMATTED
 
 # Follow the tutorial available on:
 # https://www.thepythoncode.com/article/use-gmail-api-in-python
@@ -59,16 +59,20 @@ def build_message(subject, body, attachments=[]):
   return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
 
 
-def send_message(payer_name, payment_value, barcode, html_filename):
+def send_message(payer_name, inss_ceil_value, payment_value, barcode, html_filename):
   print('[8/8] Sending successful message')
+
+  month_to_pay = dates.month_to_pay()
 
   # Get the Gmail API service
   service = gmail_authenticate()
 
-  SUBJECT = 'Guia GPS disponível para pagamento ' + MONTH_TO_PAY_FORMATTED
+  SUBJECT = f'Guia GPS disponível para pagamento {month_to_pay:%m/%Y}'
 
   BODY = f'Contribuinte: {payer_name}\n'\
       f'Categoria: {CATEGORY}\n' \
+      f'Mês: {month_to_pay:%m/%Y} ({dates.month_and_year_written_out(month_to_pay.month, month_to_pay.year)})\n' \
+      f'Teto INSS: R$ {inss_ceil_value}\n' \
       f'Valor: R$ {payment_value}\n' \
       f'Código de barras: {barcode}'
 

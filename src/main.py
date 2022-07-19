@@ -24,7 +24,9 @@ def execute():
 
       response = pass_confirmation(response, headers, cookies)
 
-      response = fill_month_and_value(response, headers, cookies)
+      response, inss_ceil_value = fill_month_and_value(
+          response, headers, cookies
+      )
 
       response = check_all_checkboxes(response, headers, cookies)
 
@@ -34,7 +36,9 @@ def execute():
           response
       )
 
-      send_message(payer_name, payment_value, barcode, html_filename)
+      send_message(
+          payer_name, inss_ceil_value, payment_value, barcode, html_filename
+      )
 
     except Exception:
       print('An error has occurred')

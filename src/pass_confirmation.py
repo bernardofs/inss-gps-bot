@@ -15,7 +15,10 @@ def pass_confirmation(response, headers, cookies):
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
-  data = f'DTPINFRA_TOKEN={DTPINFRA_TOKEN}&formDadosCadastraisCalcContribuicoesCI=formDadosCadastraisCalcContribuicoesCI&{CONFIRM_BUTTON_NAME}=Confirmar&javax.faces.ViewState={VIEW_STATE}'
+  data = f'DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
+      f'&formDadosCadastraisCalcContribuicoesCI=formDadosCadastraisCalcContribuicoesCI' \
+      f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
+      f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDadosCadastraisCIApos.xhtml',
                            cookies=cookies, headers=headers, data=data)

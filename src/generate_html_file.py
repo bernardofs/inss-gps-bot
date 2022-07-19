@@ -1,6 +1,7 @@
+from dataclasses import replace
 from bs4 import BeautifulSoup
 import re
-from fill_month_and_value import MONTH_TO_PAY_FORMATTED
+from fill_month_and_value import MONTH_TO_PAY
 
 
 def generate_html_file(response):
@@ -25,7 +26,9 @@ def generate_html_file(response):
   barcode = ''.join(barcodes)
   print(f'Barcode: {barcode}')
 
-  MONTH_TO_PAY_FORMATTED_TO_FILE = MONTH_TO_PAY_FORMATTED.replace('/', '_')
+  MONTH_TO_PAY_FORMATTED_TO_FILE = MONTH_TO_PAY.strftime(
+      '%m/%Y'
+  ).replace('/', '_')
 
   HTML_FILENAME = f'guia_de_pagamento_{MONTH_TO_PAY_FORMATTED_TO_FILE}.html'
 

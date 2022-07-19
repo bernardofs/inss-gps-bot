@@ -15,7 +15,10 @@ def check_all_checkboxes(response, headers, cookies):
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
-  data = f'formExibirDiscriminativoCI=formExibirDiscriminativoCI&DTPINFRA_TOKEN={DTPINFRA_TOKEN}&{CHECK_ALL_CHECKBOX_NAME}=Marcar+Todos&javax.faces.ViewState={VIEW_STATE}'
+  data = f'formExibirDiscriminativoCI=formExibirDiscriminativoCI' \
+      f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
+      f'&{CHECK_ALL_CHECKBOX_NAME}=Marcar+Todos' \
+      f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml',
                            headers=headers, cookies=cookies, data=data)

@@ -15,7 +15,11 @@ def generate_gps(response, headers, cookies):
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
-  data = f'formExibirDiscriminativoCI=formExibirDiscriminativoCI&DTPINFRA_TOKEN={DTPINFRA_TOKEN}&gridListSalariosCalculo:selected=0&{GENERATE_GPS_BUTTON_NAME}=Gerar+GPS&javax.faces.ViewState={VIEW_STATE}'
+  data = f'formExibirDiscriminativoCI=formExibirDiscriminativoCI' \
+      f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
+      f'&gridListSalariosCalculo:selected=0' \
+      f'&{GENERATE_GPS_BUTTON_NAME}=Gerar+GPS' \
+      f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml',
                            headers=headers, cookies=cookies, data=data)
