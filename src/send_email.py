@@ -69,7 +69,7 @@ def send_message(payer_name, payment_value, barcode, html_filename):
 
   BODY = f'Nome do contribuinte: {payer_name}\n'\
       f'Categoria: {CATEGORY}\n' \
-      f'Valor: {payment_value}\n' \
+      f'Valor: R$ {payment_value}\n' \
       f'Código de barras: {barcode}'
 
   service.users().messages().send(
