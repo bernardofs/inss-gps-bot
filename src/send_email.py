@@ -67,7 +67,7 @@ def send_message(payer_name, payment_value, barcode, html_filename):
 
   SUBJECT = 'Guia GPS disponível para pagamento ' + MONTH_TO_PAY_FORMATTED
 
-  BODY = f'Nome do contribuinte: {payer_name}\n'\
+  BODY = f'Contribuinte: {payer_name}\n'\
       f'Categoria: {CATEGORY}\n' \
       f'Valor: R$ {payment_value}\n' \
       f'Código de barras: {barcode}'
