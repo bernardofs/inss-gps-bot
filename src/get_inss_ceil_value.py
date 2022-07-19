@@ -1,7 +1,6 @@
-from bs4 import BeautifulSoup
 import re
 import requests
-
+from bs4 import BeautifulSoup
 from constants import PAYMENT_CODE
 
 
@@ -32,8 +31,8 @@ def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY):
       f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
       f'&{VALUE_TO_PAY_FIELD_NAME}=100.000,00' \
       f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}' \
-      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}'\
-      f'&{CONFIRM_BUTTON_NAME}=Confirmar'\
+      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}' \
+      f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
       f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml',

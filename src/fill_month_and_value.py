@@ -1,8 +1,8 @@
-from constants import PAYMENT_CODE
 import dates
-from get_inss_ceil_value import get_inss_ceil_value
 import requests
+from constants import PAYMENT_CODE
 from bs4 import BeautifulSoup
+from get_inss_ceil_value import get_inss_ceil_value
 
 # Payments can't be done on weekends.
 PAYMENT_DAY = dates.first_weekday_from_now()
@@ -40,8 +40,8 @@ def fill_month_and_value(response, headers, cookies):
       f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
       f'&{VALUE_TO_PAY_FIELD_NAME}={INSS_CEIL_VALUE}' \
       f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}' \
-      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}'\
-      f'&{CONFIRM_BUTTON_NAME}=Confirmar'\
+      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}' \
+      f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
       f'&javax.faces.ViewState={VIEW_STATE}'
 
   response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml',
