@@ -30,9 +30,11 @@ def execute():
 
       response = generate_gps(response, headers, cookies)
 
-      barcode, html_filename = generate_html_file(response)
+      payer_name, payment_value, barcode, html_filename = generate_html_file(
+          response
+      )
 
-      send_message(barcode, html_filename)
+      send_message(payer_name, payment_value, barcode, html_filename)
 
     except Exception:
       print('An error has occurred')
@@ -42,10 +44,12 @@ def execute():
         time.sleep(60)
 
     else:
-      return '<h1>Success</h1>The program was successfully executed!<br>Please check your email.', 200
+      return '<h1>Sucesso</h1>' \
+          'O programa foi executado com sucesso!<br>' \
+          'Por favor, verifique o email cadastrado para baixar a guia.', 200
 
   send_error_message()
-  return '<h1>Error</h1>', 500
+  return '<h1>Erro</h1>', 500
 
 
 def execute_day_restriction(DAYS_TO_WORK):

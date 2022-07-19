@@ -11,6 +11,13 @@ def generate_html_file(response):
   gps = re.sub("(<img.*?>)", "", response.content.decode('ISO-8859-1'), 0,
                re.IGNORECASE | re.DOTALL | re.MULTILINE)
 
+  payer_name = str(BeautifulSoup(gps, features="html.parser").find(
+      'td', attrs={"colspan": "2", "rowspan": "3", "valign": "top"}
+  )).split('<br/>')[2].title()
+
+  payment_value = BeautifulSoup(gps, features="html.parser").find(
+      lambda tag: tag.name == "font" and " 11 - TOTAL" in tag.text).parent.parent.select('tr > td')[1].text
+
   barcodes = BeautifulSoup(gps, features="html.parser").findAll("input",
                                                                 attrs={'size': '13'}, limit=4)
 
@@ -26,4 +33,4 @@ def generate_html_file(response):
   file.write(gps)
   file.close()
 
-  return barcode, HTML_FILENAME
+  return payer_name, payment_value, barcode, HTML_FILENAME

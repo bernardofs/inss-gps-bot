@@ -59,7 +59,7 @@ def build_message(subject, body, attachments=[]):
   return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
 
 
-def send_message(barcode, html_filename):
+def send_message(payer_name, payment_value, barcode, html_filename):
   print('[8/8] Sending successful message')
 
   # Get the Gmail API service
@@ -67,7 +67,10 @@ def send_message(barcode, html_filename):
 
   SUBJECT = 'Guia GPS disponível para pagamento ' + MONTH_TO_PAY_FORMATTED
 
-  BODY = f'Categoria: {CATEGORY}\nBarcode: {barcode}'
+  BODY = f'Nome do contribuinte: {payer_name}\n'\
+      f'Categoria: {CATEGORY}\n' \
+      f'Valor: {payment_value}\n' \
+      f'Código de barras: {barcode}'
 
   service.users().messages().send(
       userId="me",

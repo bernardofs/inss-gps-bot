@@ -52,6 +52,13 @@ def fill_initial_data():
 
   time.sleep(1)
 
+  os.remove('captcha.png')
+
+  # Check whether the app has passed the captcha verification or not
+  if driver.find_elements('xpath', '/html/body/div[1]/div[3]/ul/li'):
+    raise Exception(driver.find_element(
+        'xpath', '/html/body/div[1]/div[3]/ul/li').text)
+
   # Find request to get [JSESSIONID] from cookies
   REQUEST_URL = 'PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml'
   table_request = next((request for request in driver.requests if request.method == 'POST'
@@ -60,6 +67,5 @@ def fill_initial_data():
   JSESSIONID = table_request.response.headers['Set-Cookie'].split(
       ';')[0].replace('JSESSIONID=', '')
 
-  os.remove('captcha.png')
   driver.close()
   return (table_request.response.body, JSESSIONID)
