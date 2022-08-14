@@ -12,7 +12,7 @@ CATEGORY = ''
 # Ex: 1007, 1406, 1503
 PAYMENT_CODE = 0000
 
-# From SendGrid email API. Ex: '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'
+# From SendGrid email API. Ex: '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'
 SENDGRID_API_KEY = ''
 
 SENDER_EMAIL = ''
