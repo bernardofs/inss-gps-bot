@@ -8,7 +8,7 @@ from fill_month_and_value import fill_month_and_value
 from check_all_checkboxes import check_all_checkboxes
 from generate_html_file import generate_html_file
 from get_info_to_make_requests import get_info_to_make_requests
-from send_email import send_error_message, send_message
+from send_email_sendgrid import send_error_message, send_success_message
 
 
 def execute():
@@ -36,7 +36,7 @@ def execute():
           response
       )
 
-      send_message(
+      send_success_message(
           payer_name, inss_ceil_value, payment_value, barcode, html_filename
       )
 

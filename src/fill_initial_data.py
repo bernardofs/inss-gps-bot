@@ -3,7 +3,7 @@ import os
 from seleniumwire import webdriver
 from selenium.webdriver.support.ui import Select
 from twocaptcha import TwoCaptcha
-from constants import API_KEY, CATEGORY, NIT
+from constants import CP_API_KEY, CATEGORY, NIT
 
 
 def fill_initial_data():
@@ -34,7 +34,7 @@ def fill_initial_data():
   NIT_field.send_keys(NIT)
 
   # Solve Captcha using 2Captcha (https://2captcha.com)
-  solver = TwoCaptcha(API_KEY)
+  solver = TwoCaptcha(CP_API_KEY)
   captcha_img = driver.find_element('xpath', '//*[@id="captcha_challenge"]')
   captcha_img.screenshot('captcha.png')
 

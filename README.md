@@ -1,6 +1,6 @@
 # inss-gps-bot
 
-🇧🇷 
+🇧🇷
 
 Bot para gerar guias GPS do INSS de forma automatizada. Utiliza Rest API e Web Scraping.
 
@@ -8,7 +8,7 @@ Presente no site [SAL - Sistema de Acréscimos Legais](http://sal.receita.fazend
 
 Você pode ver o flow realizado toda vez que o bot é executado no vídeo abaixo.
 
-🇬🇧 
+🇬🇧
 
 Generate payment instructions (GPS) the from Brazilian Social Welfare (INSS) in an automated way. It uses Rest API and Web Scraping.
 
@@ -30,7 +30,7 @@ O pagamento do valor da guia é baseado sempre no teto do INSS (esse valor é de
 
 O pagamento é sempre referente ao primeiro mês no qual o boleto ainda não venceu (o último dia de pagamento é sempre no dia 15 do mês seguinte). Por exemplo, caso o bot seja executado do dia 16/06 ao dia 15/07, o boleto gerado será referente ao mês 06. O dia de vencimento de todo boleto é sempre o dia útil mais próximo do dia 15.
 
-Após geração do boleto pelo bot, um email é enviado para algum email desejado utilizando a [Gmail API](https://developers.google.com/gmail/api/guides/sending). Esse email contém o boleto no formato HTML como anexo e o código de barras bem como a categoria selecionada no corpo do email caso ele tenha sido executado com sucesso. Caso algum erro tenha ocorrido, um email também é enviado ao usuário informando que algum erro ocorreu durante a execução do programa.
+Após geração do boleto pelo bot, um email é enviado para algum email desejado utilizando a [SendGrid API](https://docs.sendgrid.com/pt-br/for-developers/sending-email/api-getting-started). Esse email contém o boleto no formato HTML como anexo e o código de barras bem como a categoria selecionada no corpo do email caso ele tenha sido executado com sucesso. Caso algum erro tenha ocorrido, um email também é enviado ao usuário informando que algum erro ocorreu durante a execução do programa.
 
 ## Observações técnicas
 
@@ -42,11 +42,11 @@ Para passar da tela em que o CAPTCHA é verificado, é utilizado o módulo [Sele
 
 ## Passos para o deploy no Heroku
 
-- Crie uma conta em [2Captcha](https://2captcha.com/) e copie a `API_KEY` gerada no site.
+- Crie uma conta em [2Captcha](https://2captcha.com/) e copie a `CP_API_KEY` gerada no site para a variável correpondente no arquivo `constants.py`.
 
 - Edite o arquivo `src/constants_example.py`, preenchendo os dados em branco e o renomeie para `src/constants.py`.
 
-- Para que a Gmail API funcione, siga os passos presentes no seguinte tutorial: https://www.thepythoncode.com/article/use-gmail-api-in-python. Coloque os arquivos necessários para autenticação na pasta `src/auth`.
+- Para que a SendGrid API funcione, siga os passos presentes no seguinte tutorial: https://docs.sendgrid.com/pt-br/for-developers/sending-email/api-getting-started. Copie a `SENDGRID_API_KEY` para a variável correpondente no arquivo `constants.py`.
 
 - Siga os passos presentes na [documentação do Heroku](https://devcenter.heroku.com/articles/git) para fazer o deploy.
 
