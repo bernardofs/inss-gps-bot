@@ -56,9 +56,9 @@ Para passar da tela em que o CAPTCHA é verificado, é utilizado o módulo [Sele
 
 - Identifique a versão que acabou de ser baixada no passo anterior, executando o seguinte comando:
 
-`docker tag IMAGE_ID AWS_ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/MY_REPOSITORY_NAME:TAG`
+  `docker tag IMAGE_ID AWS_ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/MY_REPOSITORY_NAME:TAG`
 
-O valor `IMAGE_ID` pode ser encontrado executando: `docker images`, após o pull ser concluído. Ela terá como `REPOSITORY` o valor `inss-gps-bot`. A URL do repositório pode ser encontrada no passo 3 em "View push commands".
+  O valor `IMAGE_ID` pode ser encontrado executando: `docker images`, após o pull ser concluído. Ela terá como `REPOSITORY` o valor `inss-gps-bot`. A URL do repositório pode ser encontrada no passo 3 em "View push commands".
 
 - Autentique o Docker client executando o seguinte comando, presente no passo 1 em "View push comands":
 
