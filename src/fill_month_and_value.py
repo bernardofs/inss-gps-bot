@@ -1,14 +1,14 @@
-import dates
+import os
 import requests
-from constants import PAYMENT_CODE
 from bs4 import BeautifulSoup
-from get_inss_ceil_value import get_inss_ceil_value
+from .dates import *
+from .get_inss_ceil_value import get_inss_ceil_value
 
 # Payments can't be done on weekends.
-PAYMENT_DAY = dates.first_weekday_from_now()
+PAYMENT_DAY = first_weekday_from_now()
 
 # First month available to pay without taxes if we pay today.
-MONTH_TO_PAY = dates.month_to_pay()
+MONTH_TO_PAY = month_to_pay()
 
 
 def fill_month_and_value(response, headers, cookies):
@@ -34,12 +34,14 @@ def fill_month_and_value(response, headers, cookies):
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
+  INSS_PAYMENT_CODE = os.getenv('INSS_PAYMENT_CODE')
+
   # Request the GPS for a salary equal to the INSS ceil.
   data = f'informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico' \
       f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
       f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
       f'&{VALUE_TO_PAY_FIELD_NAME}={INSS_CEIL_VALUE}' \
-      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}' \
+      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={INSS_PAYMENT_CODE}' \
       f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}' \
       f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
       f'&javax.faces.ViewState={VIEW_STATE}'

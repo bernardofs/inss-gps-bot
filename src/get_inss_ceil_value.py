@@ -1,7 +1,7 @@
+import os
 import re
 import requests
 from bs4 import BeautifulSoup
-from constants import PAYMENT_CODE
 
 
 def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY):
@@ -25,12 +25,14 @@ def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY):
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
       attrs={'name': 'DTPINFRA_TOKEN'})['value']
 
+  INSS_PAYMENT_CODE = os.getenv('INSS_PAYMENT_CODE')
+
   # Request the GPS for a salary of R$ 100.000,00 (beyond the INSS limit).
   data = f'informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico' \
       f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
       f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
       f'&{VALUE_TO_PAY_FIELD_NAME}=100.000,00' \
-      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={PAYMENT_CODE}' \
+      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={INSS_PAYMENT_CODE}' \
       f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}' \
       f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
       f'&javax.faces.ViewState={VIEW_STATE}'

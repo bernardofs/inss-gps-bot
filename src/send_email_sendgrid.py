@@ -1,9 +1,8 @@
 import base64
 import sendgrid
-import dates
 import os
 from sendgrid.helpers.mail import *
-from constants import *
+from .dates import *
 
 
 def encode_html_attachment(html_filename):
@@ -22,13 +21,14 @@ def encode_html_attachment(html_filename):
 
 
 def gen_success_message(payer_name, inss_ceil_value, payment_value, barcode):
-  month_to_pay = dates.month_to_pay()
+  month = month_to_pay()
 
-  subject = f'Guia GPS disponível para pagamento {month_to_pay:%m/%Y}'
+  subject = f'Guia GPS disponível para pagamento {month:%m/%Y}'
+  CATEGORY = os.getenv('INSS_CATEGORY')
 
   body = f'Contribuinte: {payer_name}\n'\
       f'Categoria: {CATEGORY}\n' \
-      f'Mês: {month_to_pay:%m/%Y} ({dates.month_and_year_written_out(month_to_pay.month, month_to_pay.year)})\n' \
+      f'Mês: {month:%m/%Y} ({month_and_year_written_out(month.month, month.year)})\n' \
       f'Teto INSS: R$ {inss_ceil_value}\n' \
       f'Valor: R$ {payment_value}\n' \
       f'Código de barras: {barcode}'
@@ -38,13 +38,14 @@ def gen_success_message(payer_name, inss_ceil_value, payment_value, barcode):
 
 def send_success_message(payer_name, inss_ceil_value, payment_value, barcode, html_filename):
   print('[8/8] Sending success message')
-  sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+  sg = sendgrid.SendGridAPIClient(api_key=os.getenv('SENDGRID_API_KEY'))
 
   subject, body = gen_success_message(
       payer_name, inss_ceil_value, payment_value, barcode
   )
 
-  mail = Mail(Email(SENDER_EMAIL), To(RECIPIENT_EMAIL), subject, body)
+  mail = Mail(Email(os.getenv('SENDER_EMAIL')), To(
+      os.getenv('RECIPIENT_EMAIL')), subject, body)
   mail.attachment = encode_html_attachment(html_filename)
 
   sg.client.mail.send.post(request_body=mail.get())
@@ -54,12 +55,15 @@ def send_success_message(payer_name, inss_ceil_value, payment_value, barcode, ht
 
 def send_error_message():
   print('[ERROR] Sending error message')
-  sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+  sg = sendgrid.SendGridAPIClient(api_key=os.getenv('SENDGRID_API_KEY'))
 
   subject = 'Guia GPS não conseguiu ser gerada'
 
-  body = f'Ocorreu algum tipo de erro durante a geração da guia. ' \
-      f'Por favor, gere a guia entrando no seguinte endereço: {HEROKU_ADDRESS}.'
+  GPS_SAL_URL = 'http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml'
 
-  mail = Mail(Email(SENDER_EMAIL), To(RECIPIENT_EMAIL), subject, body)
+  body = f'Ocorreu algum tipo de erro durante a geração da guia. ' \
+      f'Por favor, gere a guia manualmente entrando no seguinte endereço: {GPS_SAL_URL}.'
+
+  mail = Mail(Email(os.getenv('SENDER_EMAIL')), To(
+      os.getenv('RECIPIENT_EMAIL')), subject, body)
   sg.client.mail.send.post(request_body=mail.get())

@@ -1,13 +1,12 @@
-constants.py
+# Created by https://www.toptal.com/developers/gitignore/api/python
+# Edit at https://www.toptal.com/developers/gitignore?templates=python
+
 *.pdf
 *.png
-*.pickle
 *.json
 *.html
 out
-
-# Created by https://www.toptal.com/developers/gitignore/api/python
-# Edit at https://www.toptal.com/developers/gitignore?templates=python
+.secret.env
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

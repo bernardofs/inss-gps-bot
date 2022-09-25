@@ -1,0 +1,4 @@
+services:
+  build:
+    build: .
+    image: inss-gps-bot

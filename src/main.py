@@ -1,14 +1,14 @@
 import time
 import traceback
 from datetime import date
-from generate_gps import generate_gps
-from pass_confirmation import pass_confirmation
-from fill_initial_data import fill_initial_data
-from fill_month_and_value import fill_month_and_value
-from check_all_checkboxes import check_all_checkboxes
-from generate_html_file import generate_html_file
-from get_info_to_make_requests import get_info_to_make_requests
-from send_email_sendgrid import send_error_message, send_success_message
+from .generate_gps import generate_gps
+from .pass_confirmation import pass_confirmation
+from .fill_initial_data import fill_initial_data
+from .fill_month_and_value import fill_month_and_value
+from .check_all_checkboxes import check_all_checkboxes
+from .generate_html_file import generate_html_file
+from .get_info_to_make_requests import get_info_to_make_requests
+from .send_email_sendgrid import send_error_message, send_success_message
 
 
 def execute():
@@ -48,15 +48,8 @@ def execute():
         time.sleep(60)
 
     else:
-      return '<h1>Sucesso</h1>' \
-          'O programa foi executado com sucesso!<br>' \
-          'Por favor, verifique o email cadastrado para baixar a guia.', 200
+      return 'O programa foi executado com sucesso!' \
+          ' Por favor, verifique o email cadastrado para baixar a guia.'
 
   send_error_message()
-  return '<h1>Erro</h1>', 500
-
-
-def execute_day_restriction(DAYS_TO_WORK):
-  # The bot is going to work on days present in the array below.
-  if date.today().day in DAYS_TO_WORK:
-    execute()
+  return 'Algum erro ocorreu durante a execução do programa.'

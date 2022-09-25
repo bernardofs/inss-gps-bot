@@ -1,0 +1,95 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - '**.py'
+      - '**.yml'
+      - 'requirements.txt'
+      - 'Dockerfile'
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR Public
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: public
+
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        id: build-ecr-public
+        env:
+          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+          REGISTRY_ALIAS: p2m9w2p6
+          REPOSITORY: inss-gps-bot
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          echo ::set-output name=exit_code::$?
+
+      - name: Delete untagged images
+        if: steps.build-ecr-public.outputs.exit_code == 0
+        env:
+          REPOSITORY: inss-gps-bot
+          AWS_REGION: us-east-1
+        run: |
+          aws ecr-public describe-images --region $AWS_REGION --repository-name $REPOSITORY --query 'imageDetails[*]'  --output json > data.json
+          jq '.[] | select(. | index("imageTags") | not)' data.json > tmp.json
+          jq 'del(.registryId) | del(.repositoryName) | del(.imageSizeInBytes) | del(.imagePushedAt) | del(.imageManifestMediaType)' tmp.json > data.json
+          sed -E ':l;N;$!bl; s/}\n\{/},\n\{/g' data.json > tmp.json
+          (echo "["; cat tmp.json; echo "]") > data.json
+          cat data.json | python3 -m json.tool
+          if [ $(jq length data.json) -ne 0 ] 
+          then 
+            aws ecr-public batch-delete-image --region $AWS_REGION --repository-name $REPOSITORY --image-ids "`cat data.json`" || true 
+          fi
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        id: build-lambda-private-image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ secrets.REPOSITORY }}
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+
+      - name: Update AWS Lambda function code
+        id: update-lambda-function-code
+        env:
+          FUNCTION_ARN_NAME: ${{ secrets.FUNCTION_ARN_NAME }}
+          IMAGE_URI: ${{ steps.build-lambda-private-image.outputs.image }}
+        run: |
+          aws lambda update-function-code --function-name $FUNCTION_ARN_NAME --image-uri $IMAGE_URI
+          echo ::set-output name=exit_code::$?
+
+      - name: Delete untagged images
+        if: steps.update-lambda-function-code.exit_code == 0
+        env:
+          REPOSITORY: ${{ secrets.REPOSITORY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          IMAGES_TO_DELETE=$( aws ecr list-images --region $AWS_REGION --repository-name $REPOSITORY --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
+          aws ecr batch-delete-image --region $AWS_REGION --repository-name $REPOSITORY --image-ids "$IMAGES_TO_DELETE" || true
