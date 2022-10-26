@@ -12,7 +12,7 @@ def encode_html_attachment(html_filename):
 
   attachedFile = Attachment(
       FileContent(encoded_file),
-      FileName(html_filename),
+      FileName(html_filename.split('/')[-1]),
       FileType('text/html'),
       Disposition('attachment')
   )
