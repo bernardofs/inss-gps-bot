@@ -1,9 +1,11 @@
 FROM public.ecr.aws/lambda/python:3.8 as builder
 
 RUN yum install -y unzip && \
-  curl -Lo "/tmp/chromedriver.zip" "https://chromedriver.storage.googleapis.com/98.0.4758.48/chromedriver_linux64.zip" && \
-  curl -Lo "/tmp/chrome-linux.zip" "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F950363%2Fchrome-linux.zip?alt=media" && \
+  curl -Lo "/tmp/chromedriver.zip" "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1091508%2Fchromedriver_linux64.zip?generation=1673477717011866&alt=media" && \
+  curl -Lo "/tmp/chrome-linux.zip" "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1091508%2Fchrome-linux.zip?generation=1673477710841390&alt=media" && \
   unzip /tmp/chromedriver.zip -d /opt/ && \
+  mv /opt/chromedriver_linux64/chromedriver /opt/ && \
+  rm -rf /opt/chromedriver_linux64 && \
   unzip /tmp/chrome-linux.zip -d /opt/
 
 RUN yum install -y atk cups-libs gtk3 libXcomposite alsa-lib \
