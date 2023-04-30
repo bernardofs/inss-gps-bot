@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def generate_gps(response, headers, cookies):
+def generate_gps(session, response):
   # Request to generate GPS.
   print("[6/8] Requesting to generate GPS")
 
@@ -26,10 +26,8 @@ def generate_gps(response, headers, cookies):
       "javax.faces.ViewState": VIEW_STATE,
   }
 
-  response = requests.post(
+  response = session.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml",
-      headers=headers,
-      cookies=cookies,
       data=data,
       verify=False,
   )

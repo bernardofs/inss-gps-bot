@@ -11,11 +11,11 @@ PAYMENT_DAY = first_weekday_from_now()
 MONTH_TO_PAY = month_to_pay()
 
 
-def fill_month_and_value(response, headers, cookies):
+def fill_month_and_value(session, response):
   # Get INSS ceil value and request the payment of it.
 
   INSS_CEIL_VALUE = get_inss_ceil_value(
-      response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY
+      session, response, MONTH_TO_PAY, PAYMENT_DAY
   )
 
   print("[4/8] Writing month and value to pay")
@@ -45,18 +45,16 @@ def fill_month_and_value(response, headers, cookies):
   data = {
       "informarSalariosContribuicaoDomestico": "informarSalariosContribuicaoDomestico",
       "DTPINFRA_TOKEN": DTPINFRA_TOKEN,
-      MONTH_OF_PAYMENT_FIELD_NAME: "{MONTH_TO_PAY:%m/%Y}",
+      MONTH_OF_PAYMENT_FIELD_NAME: f"{MONTH_TO_PAY:%m/%Y}",
       VALUE_TO_PAY_FIELD_NAME: INSS_CEIL_VALUE,
       "informarSalariosContribuicaoDomestico:selCodigoPagamento": INSS_PAYMENT_CODE,
-      "informarSalariosContribuicaoDomestico:dataPag": "{PAYMENT_DAY:%d/%m/%Y}",
+      "informarSalariosContribuicaoDomestico:dataPag": f"{PAYMENT_DAY:%d/%m/%Y}",
       CONFIRM_BUTTON_NAME: "Confirmar",
       "javax.faces.ViewState": VIEW_STATE,
   }
 
   response = requests.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml",
-      headers=headers,
-      cookies=cookies,
       data=data,
       verify=False,
   )

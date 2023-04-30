@@ -1,27 +1,16 @@
 import os
-import requests
 from twocaptcha import TwoCaptcha
 from bs4 import BeautifulSoup
 
 
 # Function that setup the browser parameters and return browser object.
-def fill_initial_data():
+def fill_initial_data(session):
   print("[1/8] Filling initial data")
 
-  response = requests.get(
+  response = session.get(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml",
       verify=False,
   )
-
-  JSESSIONID = response.cookies["JSESSIONID"].replace('"', "")
-  cookies = {
-      "JSESSIONID": JSESSIONID,
-      "WWW2_ROUTEID": ".3",
-  }
-
-  headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-  }
 
   VIEW_STATE = BeautifulSoup(response.text, features="html.parser").find(
       attrs={"name": "javax.faces.ViewState"}
@@ -52,12 +41,10 @@ def fill_initial_data():
       "javax.faces.ViewState": VIEW_STATE,
   }
 
-  response = requests.post(
+  response = session.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/selecionarOpcoesCalculoApos.xhtml",
-      headers=headers,
-      cookies=cookies,
       data=data,
       verify=False,
   )
 
-  return (response.content, JSESSIONID)
+  return response.content

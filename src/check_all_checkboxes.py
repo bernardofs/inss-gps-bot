@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def check_all_checkboxes(response, headers, cookies):
+def check_all_checkboxes(session, response):
   # Check all checkboxes which indicates which filled months should be included on the GPS.
   print("[5/8] Checking checkbox")
 
@@ -25,10 +25,8 @@ def check_all_checkboxes(response, headers, cookies):
       "javax.faces.ViewState": VIEW_STATE,
   }
 
-  response = requests.post(
+  response = session.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml",
-      headers=headers,
-      cookies=cookies,
       data=data,
       verify=False,
   )

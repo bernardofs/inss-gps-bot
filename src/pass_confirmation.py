@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def pass_confirmation(response, headers, cookies):
+def pass_confirmation(session, response):
   # Confirm that the NIT number was typed correctly by looking at the user info linked to it.
   print("[2/8] Confirming data")
 
@@ -25,10 +25,8 @@ def pass_confirmation(response, headers, cookies):
       "javax.faces.ViewState": VIEW_STATE,
   }
 
-  response = requests.post(
+  response = session.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDadosCadastraisCIApos.xhtml",
-      cookies=cookies,
-      headers=headers,
       data=data,
       verify=False,
   )

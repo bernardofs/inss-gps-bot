@@ -6,7 +6,7 @@ from .fill_initial_data import fill_initial_data
 from .fill_month_and_value import fill_month_and_value
 from .check_all_checkboxes import check_all_checkboxes
 from .generate_html_file import generate_html_file
-from .get_info_to_make_requests import get_info_to_make_requests
+from .setup_session import setup_session
 from .send_email_sendgrid import send_error_message, send_success_message
 
 
@@ -17,19 +17,17 @@ def execute():
     print(f"Attempt {tries}")
 
     try:
-      response, JSESSIONID = fill_initial_data()
+      session = setup_session()
 
-      headers, cookies = get_info_to_make_requests(JSESSIONID)
+      response = fill_initial_data(session)
 
-      response = pass_confirmation(response, headers, cookies)
+      response = pass_confirmation(session, response)
 
-      response, inss_ceil_value = fill_month_and_value(
-          response, headers, cookies
-      )
+      response, inss_ceil_value = fill_month_and_value(session, response)
 
-      response = check_all_checkboxes(response, headers, cookies)
+      response = check_all_checkboxes(session, response)
 
-      response = generate_gps(response, headers, cookies)
+      response = generate_gps(session, response)
 
       payer_name, payment_value, barcode, html_filename = generate_html_file(
           response
