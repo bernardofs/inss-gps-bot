@@ -8,43 +8,59 @@ def get_inss_ceil_value(response, headers, cookies, MONTH_TO_PAY, PAYMENT_DAY):
   # Get the INSS ceil value by requesting the payment of a very large amount of money.
   # This returns an error in the screen which shows the ceil value for the INSS. We
   # can use the error message of this field to get the value we want.
-  print('[3/8] Getting INSS ceil value')
+  print("[3/8] Getting INSS ceil value")
 
   MONTH_OF_PAYMENT_FIELD_NAME = BeautifulSoup(response, features="html.parser").find(
-      attrs={'class': 'center competenciaFormat'})['name']
+      attrs={"class": "center competenciaFormat"}
+  )["name"]
 
   VALUE_TO_PAY_FIELD_NAME = BeautifulSoup(response, features="html.parser").find(
-      attrs={'class': 'right moedaFormat'})['name']
+      attrs={"class": "right moedaFormat"}
+  )["name"]
 
   CONFIRM_BUTTON_NAME = BeautifulSoup(response, features="html.parser").find(
-      attrs={'value': 'Confirmar'})['name']
+      attrs={"value": "Confirmar"}
+  )["name"]
 
   VIEW_STATE = BeautifulSoup(response, features="html.parser").find(
-      attrs={'name': 'javax.faces.ViewState'})['value']
+      attrs={"name": "javax.faces.ViewState"}
+  )["value"]
 
   DTPINFRA_TOKEN = BeautifulSoup(response, features="html.parser").find(
-      attrs={'name': 'DTPINFRA_TOKEN'})['value']
+      attrs={"name": "DTPINFRA_TOKEN"}
+  )["value"]
 
-  INSS_PAYMENT_CODE = os.getenv('INSS_PAYMENT_CODE')
+  INSS_PAYMENT_CODE = os.getenv("INSS_PAYMENT_CODE")
 
   # Request the GPS for a salary of R$ 100.000,00 (beyond the INSS limit).
-  data = f'informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico' \
-      f'&DTPINFRA_TOKEN={DTPINFRA_TOKEN}' \
-      f'&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}' \
-      f'&{VALUE_TO_PAY_FIELD_NAME}=100.000,00' \
-      f'&informarSalariosContribuicaoDomestico:selCodigoPagamento={INSS_PAYMENT_CODE}' \
-      f'&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}' \
-      f'&{CONFIRM_BUTTON_NAME}=Confirmar' \
-      f'&javax.faces.ViewState={VIEW_STATE}'
+  data = (
+      f"informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico"
+      f"&DTPINFRA_TOKEN={DTPINFRA_TOKEN}"
+      f"&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}"
+      f"&{VALUE_TO_PAY_FIELD_NAME}=100.000,00"
+      f"&informarSalariosContribuicaoDomestico:selCodigoPagamento={INSS_PAYMENT_CODE}"
+      f"&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}"
+      f"&{CONFIRM_BUTTON_NAME}=Confirmar"
+      f"&javax.faces.ViewState={VIEW_STATE}"
+  )
 
-  response = requests.post('http://sal.receita.fazenda.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml',
-                           headers=headers, cookies=cookies, data=data)
+  response = requests.post(
+      "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml",
+      headers=headers,
+      cookies=cookies,
+      data=data,
+      verify=False,
+  )
 
   # Scrap the HTML to get the INSS ceil value from the error message.
-  error_text_that_contains_ceil_value = BeautifulSoup(response.content, features="html.parser").find(
-      "li", attrs={'class': 'erro'}).get_text()
+  error_text_that_contains_ceil_value = (
+      BeautifulSoup(response.content, features="html.parser")
+      .find("li", attrs={"class": "erro"})
+      .get_text()
+  )
 
   INSS_CEIL_VALUE = re.search(
-      r"R\$ ([\d,.]+)\.$", error_text_that_contains_ceil_value).groups()[0]
+      r"R\$ ([\d,.]+)\.$", error_text_that_contains_ceil_value
+  ).groups()[0]
 
   return INSS_CEIL_VALUE
