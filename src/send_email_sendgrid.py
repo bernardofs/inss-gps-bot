@@ -67,10 +67,12 @@ def send_error_message():
 
   subject = "Guia GPS não conseguiu ser gerada"
 
+  API_GATEWAY_URL = os.getenv("API_GATEWAY_URL")
+
   body = (
-      f"Ocorreu algum tipo de erro durante a geração da guia. "
-      f"Caso esteja tentando gerar a guia num fim de semana no fim do mês, não será possível devido a limitações do site."
-      f"Caso deseje, tente requisitar para o bot tentar a guia manualmente entrando no seguinte endereço: {GPS_SAL_URL}."
+      f"Ocorreu algum tipo de erro durante a geração da guia.\n"
+      f"Caso esteja tentando gerar a guia num fim de semana no fim do mês, não será possível devido a limitações do site.\n"
+      f"Caso deseje, tente requisitar para o bot tentar gerar a guia manualmente entrando no seguinte endereço: {API_GATEWAY_URL}."
   )
 
   mail = Mail(
