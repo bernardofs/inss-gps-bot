@@ -42,16 +42,16 @@ def fill_month_and_value(response, headers, cookies):
   INSS_PAYMENT_CODE = os.getenv("INSS_PAYMENT_CODE")
 
   # Request the GPS for a salary equal to the INSS ceil.
-  data = (
-      f"informarSalariosContribuicaoDomestico=informarSalariosContribuicaoDomestico"
-      f"&DTPINFRA_TOKEN={DTPINFRA_TOKEN}"
-      f"&{MONTH_OF_PAYMENT_FIELD_NAME}={MONTH_TO_PAY:%m/%Y}"
-      f"&{VALUE_TO_PAY_FIELD_NAME}={INSS_CEIL_VALUE}"
-      f"&informarSalariosContribuicaoDomestico:selCodigoPagamento={INSS_PAYMENT_CODE}"
-      f"&informarSalariosContribuicaoDomestico:dataPag={PAYMENT_DAY:%d/%m/%Y}"
-      f"&{CONFIRM_BUTTON_NAME}=Confirmar"
-      f"&javax.faces.ViewState={VIEW_STATE}"
-  )
+  data = {
+      "informarSalariosContribuicaoDomestico": "informarSalariosContribuicaoDomestico",
+      "DTPINFRA_TOKEN": DTPINFRA_TOKEN,
+      MONTH_OF_PAYMENT_FIELD_NAME: "{MONTH_TO_PAY:%m/%Y}",
+      VALUE_TO_PAY_FIELD_NAME: INSS_CEIL_VALUE,
+      "informarSalariosContribuicaoDomestico:selCodigoPagamento": INSS_PAYMENT_CODE,
+      "informarSalariosContribuicaoDomestico:dataPag": "{PAYMENT_DAY:%d/%m/%Y}",
+      CONFIRM_BUTTON_NAME: "Confirmar",
+      "javax.faces.ViewState": VIEW_STATE,
+  }
 
   response = requests.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml",

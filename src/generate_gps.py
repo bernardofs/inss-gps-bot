@@ -18,13 +18,13 @@ def generate_gps(response, headers, cookies):
       attrs={"name": "DTPINFRA_TOKEN"}
   )["value"]
 
-  data = (
-      f"formExibirDiscriminativoCI=formExibirDiscriminativoCI"
-      f"&DTPINFRA_TOKEN={DTPINFRA_TOKEN}"
-      f"&gridListSalariosCalculo:selected=0"
-      f"&{GENERATE_GPS_BUTTON_NAME}=Gerar+GPS"
-      f"&javax.faces.ViewState={VIEW_STATE}"
-  )
+  data = {
+      "formExibirDiscriminativoCI": "formExibirDiscriminativoCI",
+      "DTPINFRA_TOKEN": DTPINFRA_TOKEN,
+      "gridListSalariosCalculo:selected": 0,
+      GENERATE_GPS_BUTTON_NAME: "Gerar+GPS",
+      "javax.faces.ViewState": VIEW_STATE,
+  }
 
   response = requests.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml",

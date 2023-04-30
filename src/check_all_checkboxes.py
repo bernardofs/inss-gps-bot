@@ -18,12 +18,12 @@ def check_all_checkboxes(response, headers, cookies):
       attrs={"name": "DTPINFRA_TOKEN"}
   )["value"]
 
-  data = (
-      f"formExibirDiscriminativoCI=formExibirDiscriminativoCI"
-      f"&DTPINFRA_TOKEN={DTPINFRA_TOKEN}"
-      f"&{CHECK_ALL_CHECKBOX_NAME}=Marcar+Todos"
-      f"&javax.faces.ViewState={VIEW_STATE}"
-  )
+  data = {
+      "formExibirDiscriminativoCI": "formExibirDiscriminativoCI",
+      "DTPINFRA_TOKEN": DTPINFRA_TOKEN,
+      CHECK_ALL_CHECKBOX_NAME: "Marcar+Todos",
+      "javax.faces.ViewState": VIEW_STATE,
+  }
 
   response = requests.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/exibirDiscriminativoApos.xhtml",
