@@ -46,8 +46,8 @@ def execute():
 
     else:
       return (
-          "O programa foi executado com sucesso!"
-          " Por favor, verifique o email cadastrado para baixar a guia."
+          "O programa foi executado com sucesso! "
+          "Por favor, verifique o email cadastrado para baixar a guia."
       )
 
   send_error_message()

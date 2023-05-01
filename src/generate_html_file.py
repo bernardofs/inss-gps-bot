@@ -8,19 +8,25 @@ def generate_html_file(response):
   print("[7/8] Generating html file")
 
   # Remove all <img> tags because it generates an error when converting to PDF.
-  gps = re.sub("(<img.*?>)", "", response.content.decode("ISO-8859-1"), 0,
+  gps = re.sub("(<img.*?>)", "", response.content.decode("utf-8"), 0,
                re.IGNORECASE | re.DOTALL | re.MULTILINE)
 
-  payer_name = str(BeautifulSoup(gps, features="html.parser").find(
+  soup = BeautifulSoup(gps, features="html.parser")
+
+  # Add tag to support unicode characters
+  soup.head.insert(0, soup.new_tag('meta', charset='utf-8'))
+
+  payer_name = str(soup.find(
       "td", attrs={"colspan": "2", "rowspan": "3", "valign": "top"}
   )).split("<br/>")[2].title()
   # Remove HTML comment from the name
-  payer_name = re.sub(r"<!--.*?-->", "", payer_name)
+  payer_name = re.sub(r"(<!--.*?-->|\n)", "", payer_name)
 
-  payment_value = BeautifulSoup(gps, features="html.parser").find(
-      lambda tag: tag.name == "font" and " 11 - TOTAL" in tag.text).parent.parent.select("tr > td")[1].text
+  payment_value = soup.find(
+      lambda tag: tag.name == "font" and " 11 - TOTAL" in tag.text
+  ).parent.parent.select("tr > td")[1].text
 
-  barcode = BeautifulSoup(gps, features="html.parser").find(
+  barcode = soup.find(
       "input", attrs={"id": "linhaDigitavelCompleta1"}
   )["value"]
 
@@ -33,8 +39,7 @@ def generate_html_file(response):
 
   HTML_FILENAME = f"/tmp/guia_de_pagamento_{MONTH_TO_PAY_FORMATTED_TO_FILE}.html"
 
-  file = open(HTML_FILENAME, "w")
-  file.write(gps)
-  file.close()
+  with open(HTML_FILENAME, 'w', encoding='utf-8') as f:
+    f.write(soup.prettify())
 
   return payer_name, payment_value, barcode, HTML_FILENAME
