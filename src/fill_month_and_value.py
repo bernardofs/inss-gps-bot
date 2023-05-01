@@ -1,5 +1,4 @@
 import os
-import requests
 from bs4 import BeautifulSoup
 from .dates import *
 from .get_inss_ceil_value import get_inss_ceil_value
@@ -53,7 +52,7 @@ def fill_month_and_value(session, response):
       "javax.faces.ViewState": VIEW_STATE,
   }
 
-  response = requests.post(
+  response = session.post(
       "https://sal.rfb.gov.br/PortalSalInternet/faces/pages/calcContribuicoesCI/filiadosApos/informarSalariosContribuicaoApos.xhtml",
       data=data,
       verify=False,
