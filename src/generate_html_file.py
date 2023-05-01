@@ -18,11 +18,11 @@ def generate_html_file(response):
   payment_value = BeautifulSoup(gps, features="html.parser").find(
       lambda tag: tag.name == "font" and " 11 - TOTAL" in tag.text).parent.parent.select("tr > td")[1].text
 
-  barcodes = BeautifulSoup(gps, features="html.parser").findAll("input",
-                                                                attrs={"size": "13"}, limit=4)
+  barcode = BeautifulSoup(gps, features="html.parser").find(
+      "input", attrs={"id": "linhaDigitavelCompleta1"}
+  )["value"]
 
-  barcodes = [code["value"].replace("-", "") for code in barcodes]
-  barcode = "".join(barcodes)
+  barcode = re.sub(r"[\s-]+", "", barcode)
   print(f"Barcode: {barcode}")
 
   MONTH_TO_PAY_FORMATTED_TO_FILE = MONTH_TO_PAY.strftime(
